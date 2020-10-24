@@ -6,7 +6,7 @@ import { Rule, Schedule } from "@aws-cdk/aws-events";
 import { LambdaFunction } from "@aws-cdk/aws-events-targets";
 import { RetentionDays } from "@aws-cdk/aws-logs";
 
-const PARCEL_CACHE_BASE_DIR = "./parcelCache";
+const PARCEL_CACHE_BASE_DIR = "./.parcel-cache";
 export class PodcastResourcesStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -21,8 +21,8 @@ export class PodcastResourcesStack extends Stack {
       },
     });
 
-    const xmlProcessorFunction = new NodejsFunction(this, "xmlProcessor", {
-      entry: "lambda/xmlProcessor/src/index.ts",
+    const xmlProcessorFunction = new NodejsFunction(this, "xml", {
+      entry: "lambda/xml/src/index.ts",
       handler: "handler",
       runtime: Runtime.NODEJS_12_X,
       cacheDir: `${PARCEL_CACHE_BASE_DIR}/xml`,
