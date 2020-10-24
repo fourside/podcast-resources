@@ -22,6 +22,7 @@
     "husky": "^4.3.0",
     "jest": "^26.4.2",
     "lint-staged": "^10.4.2",
+    "parcel": "2.0.0-beta.1",
     "prettier": "^2.1.2",
     "ts-jest": "^26.2.0",
     "ts-node": "^8.1.0",
