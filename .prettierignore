@@ -1,0 +1,6 @@
+*.js
+*.d.ts
+.cdk.staging
+cdk.out
+.parcel-cache
+node_modules
