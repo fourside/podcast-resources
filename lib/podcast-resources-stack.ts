@@ -1,4 +1,4 @@
-import { Stack, StackProps, Construct } from "@aws-cdk/core";
+import { Stack, StackProps, Construct, Duration } from "@aws-cdk/core";
 import { Bucket } from "@aws-cdk/aws-s3";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import { Runtime } from "@aws-cdk/aws-lambda";
@@ -11,7 +11,7 @@ export class PodcastResourcesStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    new Bucket(this, "radiko-programs", {
+    const bucket = new Bucket(this, "radiko-programs", {
       bucketName: "radiko-programs",
       blockPublicAccess: {
         blockPublicAcls: true,
@@ -27,7 +27,13 @@ export class PodcastResourcesStack extends Stack {
       runtime: Runtime.NODEJS_12_X,
       cacheDir: `${PARCEL_CACHE_BASE_DIR}/xml`,
       logRetention: RetentionDays.ONE_MONTH,
+      timeout: Duration.minutes(10),
+      environment: {
+        bucketName: bucket.bucketName,
+      },
     });
+
+    bucket.grantWrite(xmlProcessorFunction);
 
     new Rule(this, "radikoXml", {
       schedule: Schedule.cron({
