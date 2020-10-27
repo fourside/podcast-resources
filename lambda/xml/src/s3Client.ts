@@ -24,13 +24,5 @@ async function put(bucket: string, fileName: string, json: unknown): Promise<S3.
     Key: fileName,
     Body: JSON.stringify(json),
   };
-  return new Promise((resolve, reject) => {
-    s3Client.putObject(params, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
+  return s3Client.putObject(params).promise();
 }
