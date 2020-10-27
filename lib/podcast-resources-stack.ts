@@ -5,8 +5,10 @@ import { Runtime } from "@aws-cdk/aws-lambda";
 import { Rule, Schedule } from "@aws-cdk/aws-events";
 import { LambdaFunction } from "@aws-cdk/aws-events-targets";
 import { RetentionDays } from "@aws-cdk/aws-logs";
+import { RestApi, LambdaIntegration, Cors } from "@aws-cdk/aws-apigateway";
 
 const PARCEL_CACHE_BASE_DIR = "./.parcel-cache";
+
 export class PodcastResourcesStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -42,5 +44,46 @@ export class PodcastResourcesStack extends Stack {
       }),
       targets: [new LambdaFunction(xmlProcessorFunction)],
     });
+
+    const apiBackend = new NodejsFunction(this, "postalcodesearch", {
+      entry: "lambda/api/src/index.ts",
+      handler: "handler",
+      runtime: Runtime.NODEJS_12_X,
+      cacheDir: `${PARCEL_CACHE_BASE_DIR}/api`,
+      logRetention: RetentionDays.ONE_MONTH,
+      environment: {
+        bucketName: bucket.bucketName,
+      },
+    });
+
+    bucket.grantRead(apiBackend);
+
+    const radikoApi = new RestApi(this, "radikoApi");
+    const integration = new LambdaIntegration(apiBackend);
+
+    const getStations = radikoApi.root.addResource("stations", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: Cors.ALL_ORIGINS,
+        allowMethods: ["GET"],
+      },
+    });
+    getStations.addMethod("GET", integration);
+
+    const getPrograms = radikoApi.root.addResource("programs");
+    const getProgram = getPrograms.addResource("{program}", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: Cors.ALL_ORIGINS,
+        allowMethods: ["GET"],
+      },
+    });
+    getProgram.addMethod("GET", integration);
+
+    const postProgram = radikoApi.root.addResource("program", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: Cors.ALL_ORIGINS,
+        allowMethods: ["POST"],
+      },
+    });
+    postProgram.addMethod("POST", integration);
   }
 }
