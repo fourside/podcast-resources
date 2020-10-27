@@ -15,6 +15,7 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.64",
     "@types/node-fetch": "^2.5.7"
   }
 }
