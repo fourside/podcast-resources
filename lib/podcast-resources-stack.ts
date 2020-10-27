@@ -45,7 +45,7 @@ export class PodcastResourcesStack extends Stack {
       targets: [new LambdaFunction(xmlProcessorFunction)],
     });
 
-    const apiBackend = new NodejsFunction(this, "postalcodesearch", {
+    const apiBackend = new NodejsFunction(this, "radikoApiBackend", {
       entry: "lambda/api/src/index.ts",
       handler: "handler",
       runtime: Runtime.NODEJS_12_X,
