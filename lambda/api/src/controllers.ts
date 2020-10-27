@@ -7,7 +7,7 @@ export type Controller = (RequestContext: RequestContext) => Promise<Response>;
 
 export async function getStationsController(requestContext: RequestContext): Promise<Response> {
   const { bucket } = requestContext;
-  const stations = getStations(bucket);
+  const stations = await getStations(bucket);
   return {
     statusCode: 200,
     body: JSON.stringify(stations),
@@ -20,10 +20,10 @@ export async function getProgramsController(requestContext: RequestContext): Pro
     throw new ClientError("no pathparameter in get programs");
   }
   const stationId = pathParameters["stationId"];
-  if (!existsStationId(bucket, stationId)) {
+  if (!(await existsStationId(bucket, stationId))) {
     throw new ClientError(`no station id in stations: id=${stationId}`);
   }
-  const programs = getPrograms(bucket, stationId);
+  const programs = await getPrograms(bucket, stationId);
   return {
     statusCode: 200,
     body: JSON.stringify(programs),
@@ -39,7 +39,7 @@ export async function postProgramController(requestContext: RequestContext): Pro
   if (!validationResult.isValid) {
     throw new ClientError(validationResult.message || "validation error");
   }
-  if (!existsStationId(bucket, body.stationId)) {
+  if (!(await existsStationId(bucket, body.stationId))) {
     throw new ClientError(`no station id in stations: id=${body.stationId}`);
   }
   // TODO: send message to sqs
