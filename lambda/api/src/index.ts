@@ -12,8 +12,10 @@ export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayPr
     }
     const { httpMethod, path } = event;
     const controller = router(httpMethod, path);
+    console.log("controller", controller.name);
     const requestContext = requestContextFactory(event, bucketName);
     const response = await controller(requestContext);
+    console.log("response", response);
     return response;
   } catch (err) {
     console.error(err);
