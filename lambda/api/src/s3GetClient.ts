@@ -28,11 +28,12 @@ async function getObject<T>(params: S3.Types.GetObjectRequest): Promise<T> {
     s3Client.getObject(params, (err, data) => {
       if (err) {
         reject(err);
-      } else if (typeof data.Body === "string") {
-        const body = JSON.parse(data.Body) as T;
+      } else if (Buffer.isBuffer(data.Body)) {
+        const jsonString = data.Body.toString();
+        const body = JSON.parse(jsonString) as T;
         resolve(body);
       } else {
-        reject("S3 object's body is not string");
+        reject("S3 object's body is not Buffer");
       }
     });
   });
