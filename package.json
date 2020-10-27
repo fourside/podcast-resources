@@ -36,6 +36,7 @@
     "@aws-cdk/aws-lambda-nodejs": "1.70.0",
     "@aws-cdk/aws-logs": "1.70.0",
     "@aws-cdk/aws-s3": "1.70.0",
+    "@aws-cdk/aws-sqs": "^1.70.0",
     "@aws-cdk/core": "1.70.0",
     "source-map-support": "^0.5.16"
   },

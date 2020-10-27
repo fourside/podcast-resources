@@ -6,6 +6,7 @@ import { Rule, Schedule } from "@aws-cdk/aws-events";
 import { LambdaFunction } from "@aws-cdk/aws-events-targets";
 import { RetentionDays } from "@aws-cdk/aws-logs";
 import { RestApi, LambdaIntegration, Cors } from "@aws-cdk/aws-apigateway";
+import { Queue } from "@aws-cdk/aws-sqs";
 
 const PARCEL_CACHE_BASE_DIR = "./.parcel-cache";
 
@@ -45,6 +46,11 @@ export class PodcastResourcesStack extends Stack {
       targets: [new LambdaFunction(xmlProcessorFunction)],
     });
 
+    const queue = new Queue(this, "radikoQueue", {
+      queueName: "radiko.fifo",
+      fifo: true,
+    });
+
     const apiBackend = new NodejsFunction(this, "radikoApiBackend", {
       entry: "lambda/api/src/index.ts",
       handler: "handler",
@@ -53,10 +59,12 @@ export class PodcastResourcesStack extends Stack {
       logRetention: RetentionDays.ONE_MONTH,
       environment: {
         bucketName: bucket.bucketName,
+        queueUrl: queue.queueUrl,
       },
     });
 
     bucket.grantRead(apiBackend);
+    queue.grantSendMessages(apiBackend);
 
     const radikoApi = new RestApi(this, "radikoApi");
     const integration = new LambdaIntegration(apiBackend);
