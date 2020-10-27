@@ -2,6 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult as Response } from "aws-lam
 import { ClientError } from "./ClientError";
 import { PostBody, validatePostBody } from "./PostBody";
 import { getStations, getPrograms } from "./s3GetClient";
+import { sendMessage } from "./sqsClient";
 
 export type Controller = (RequestContext: RequestContext) => Promise<Response>;
 
@@ -31,7 +32,7 @@ export async function getProgramsController(requestContext: RequestContext): Pro
 }
 
 export async function postProgramController(requestContext: RequestContext): Promise<Response> {
-  const { bucket, body } = requestContext;
+  const { bucket, body, requestId } = requestContext;
   if (!body) {
     throw new ClientError(`no request body`);
   }
@@ -42,7 +43,9 @@ export async function postProgramController(requestContext: RequestContext): Pro
   if (!(await existsStationId(bucket, body.stationId))) {
     throw new ClientError(`no station id in stations: id=${body.stationId}`);
   }
-  // TODO: send message to sqs
+  const result = await sendMessage(body, requestId);
+  console.log("send sqs", result);
+
   return {
     statusCode: 201,
     body: "",
@@ -53,6 +56,7 @@ type RequestContext = {
   bucket: string;
   pathParameters: { [name: string]: string } | null;
   body: PostBody;
+  requestId: string;
 };
 
 export function requestContextFactory(event: APIGatewayProxyEvent, bucket: string): RequestContext {
@@ -61,6 +65,7 @@ export function requestContextFactory(event: APIGatewayProxyEvent, bucket: strin
     bucket,
     pathParameters: event.pathParameters,
     body,
+    requestId: event.requestContext.requestId,
   };
 }
 
