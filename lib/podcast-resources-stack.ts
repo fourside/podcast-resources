@@ -49,6 +49,7 @@ export class PodcastResourcesStack extends Stack {
     const queue = new Queue(this, "radikoQueue", {
       queueName: "radiko.fifo",
       fifo: true,
+      visibilityTimeout: Duration.minutes(240),
     });
 
     const apiBackend = new NodejsFunction(this, "radikoApiBackend", {
