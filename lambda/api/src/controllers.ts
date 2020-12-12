@@ -20,7 +20,8 @@ export async function getProgramsController(requestContext: RequestContext): Pro
   if (!pathParameters) {
     throw new ClientError("no pathparameter in get programs");
   }
-  const stationId = pathParameters["stationId"];
+  // ;( `A sibling ({program}) of this resource already has a variable path part -- only one is allowed`
+  const stationId = pathParameters["program"];
   if (!(await existsStationId(bucket, stationId))) {
     throw new ClientError(`no station id in stations: id=${stationId}`);
   }
