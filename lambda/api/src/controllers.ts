@@ -61,7 +61,13 @@ export async function getQueuedProgramsController(requestContext: RequestContext
       body: "",
     };
   }
-  const messages = result.Messages.map((message) => message.Body);
+  const messages = result.Messages.reduce<any>((acc, cur) => {
+    if (cur.Body) {
+      const body = JSON.parse(cur.Body);
+      acc.push(body);
+    }
+    return acc;
+  }, []);
   return {
     statusCode: 200,
     body: JSON.stringify(messages),
