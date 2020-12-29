@@ -1,10 +1,19 @@
 import { ClientError } from "./ClientError";
-import { Controller, getStationsController, getProgramsController, postProgramController } from "./controllers";
+import {
+  Controller,
+  getStationsController,
+  getProgramsController,
+  postProgramController,
+  getQueuedProgramsController,
+} from "./controllers";
 
 export function router(httpMethod: string, path: string): Controller {
   if (httpMethod === "GET") {
     if ("/stations" === path) {
       return getStationsController;
+    }
+    if (/^\/programs\/queue/.test(path)) {
+      return getQueuedProgramsController;
     }
     if (/^\/programs\/\w+/.test(path)) {
       return getProgramsController;

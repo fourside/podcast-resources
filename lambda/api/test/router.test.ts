@@ -1,5 +1,10 @@
 import { router } from "../src/router";
-import { getProgramsController, getStationsController, postProgramController } from "../src/controllers";
+import {
+  getProgramsController,
+  getStationsController,
+  postProgramController,
+  getQueuedProgramsController,
+} from "../src/controllers";
 import { ClientError } from "../src/ClientError";
 
 describe("router", () => {
@@ -25,6 +30,18 @@ describe("router", () => {
 
     // assert
     expect(controller.name).toBe(getProgramsController.name);
+  });
+
+  it("should return getQueuedProgramsController", () => {
+    // arrange
+    const method = "GET";
+    const path = "/programs/queue";
+
+    // act
+    const controller = router(method, path);
+
+    // assert
+    expect(controller.name).toBe(getQueuedProgramsController.name);
   });
 
   it("should return postProgramController", () => {

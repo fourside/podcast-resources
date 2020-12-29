@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult as Response } from "aws-lam
 import { ClientError } from "./ClientError";
 import { PostBody, validatePostBody } from "./PostBody";
 import { getStations, getPrograms } from "./s3GetClient";
-import { sendMessage } from "./sqsClient";
+import { sendMessage, receiveMessages } from "./sqsClient";
 
 export type Controller = (RequestContext: RequestContext) => Promise<Response>;
 
@@ -50,6 +50,21 @@ export async function postProgramController(requestContext: RequestContext): Pro
   return {
     statusCode: 201,
     body: "",
+  };
+}
+
+export async function getQueuedProgramsController(requestContext: RequestContext): Promise<Response> {
+  const result = await receiveMessages();
+  if (!result.Messages) {
+    return {
+      statusCode: 204,
+      body: "",
+    };
+  }
+  const messages = result.Messages.map((message) => message.Body);
+  return {
+    statusCode: 200,
+    body: JSON.stringify(messages),
   };
 }
 

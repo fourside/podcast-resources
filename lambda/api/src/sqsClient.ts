@@ -17,3 +17,16 @@ export async function sendMessage(postBody: PostBody, requestId: string): Promis
   };
   return sqsClient.sendMessage(params).promise();
 }
+
+export async function receiveMessages(): Promise<SQS.ReceiveMessageResult> {
+  const queueUrl = process.env.queueUrl;
+  if (!queueUrl) {
+    throw new Error("not passed queueUrl");
+  }
+
+  const params: SQS.Types.ReceiveMessageRequest = {
+    QueueUrl: queueUrl,
+    VisibilityTimeout: 0,
+  };
+  return sqsClient.receiveMessage(params).promise();
+}
