@@ -66,6 +66,7 @@ export class PodcastResourcesStack extends Stack {
 
     bucket.grantRead(apiBackend);
     queue.grantSendMessages(apiBackend);
+    queue.grantConsumeMessages(apiBackend);
 
     const radikoApi = new RestApi(this, "radikoApi");
     const integration = new LambdaIntegration(apiBackend);
