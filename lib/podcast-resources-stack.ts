@@ -51,6 +51,7 @@ export class PodcastResourcesStack extends Stack {
       fifo: true,
       visibilityTimeout: Duration.minutes(240),
       retentionPeriod: Duration.days(8),
+      contentBasedDeduplication: true,
     });
 
     const queue = new Queue(this, "radikoQueue", {
@@ -58,6 +59,7 @@ export class PodcastResourcesStack extends Stack {
       fifo: true,
       visibilityTimeout: Duration.minutes(240),
       retentionPeriod: Duration.days(1),
+      contentBasedDeduplication: true,
       deadLetterQueue: {
         queue: deadLetterQueue,
         maxReceiveCount: 1,
