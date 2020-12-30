@@ -9,6 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
+    "lambda:ci": "npm ci --prefix lambda",
     "prettier": "prettier --write \"**/*.ts\"",
     "precommit": "tsc --noEmit && lint-staged"
   },
