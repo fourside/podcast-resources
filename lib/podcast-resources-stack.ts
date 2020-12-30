@@ -46,10 +46,22 @@ export class PodcastResourcesStack extends Stack {
       targets: [new LambdaFunction(xmlProcessorFunction)],
     });
 
+    const deadLetterQueue = new Queue(this, "radikoDeadLetterQueue", {
+      queueName: "radikoDeadLetter.fifo",
+      fifo: true,
+      visibilityTimeout: Duration.minutes(240),
+      retentionPeriod: Duration.days(8),
+    });
+
     const queue = new Queue(this, "radikoQueue", {
       queueName: "radiko.fifo",
       fifo: true,
       visibilityTimeout: Duration.minutes(240),
+      retentionPeriod: Duration.days(1),
+      deadLetterQueue: {
+        queue: deadLetterQueue,
+        maxReceiveCount: 1,
+      },
     });
 
     const apiBackend = new NodejsFunction(this, "radikoApiBackend", {
@@ -61,6 +73,7 @@ export class PodcastResourcesStack extends Stack {
       environment: {
         bucketName: bucket.bucketName,
         queueUrl: queue.queueUrl,
+        deadLetterQueueUrl: deadLetterQueue.queueUrl,
       },
     });
 
