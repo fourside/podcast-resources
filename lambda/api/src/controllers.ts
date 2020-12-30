@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult as Response } from "aws-lam
 import { ClientError } from "./ClientError";
 import { PostBody, validatePostBody } from "./PostBody";
 import { getStations, getPrograms } from "./s3GetClient";
-import { sendMessage, receiveMessages } from "./sqsClient";
+import { sendMessage, receiveMessages, receiveDeadLetterMessages } from "./sqsClient";
 
 export type Controller = (RequestContext: RequestContext) => Promise<Response>;
 
@@ -57,14 +57,16 @@ export async function postProgramController(requestContext: RequestContext): Pro
 }
 
 export async function getQueuedProgramsController(requestContext: RequestContext): Promise<Response> {
-  const result = await receiveMessages();
-  if (!result.Messages) {
+  const resultAll = await Promise.all([receiveMessages(), receiveDeadLetterMessages()]);
+  const messages = [...(resultAll[0].Messages ?? []), ...(resultAll[1].Messages ?? [])];
+
+  if (messages.length === 0) {
     return {
       statusCode: 204,
       body: "",
     };
   }
-  const messages = result.Messages.reduce<any>((acc, cur) => {
+  const messageBodies = messages.reduce<any>((acc, cur) => {
     if (cur.Body) {
       const body = JSON.parse(cur.Body);
       acc.push(body);
@@ -73,7 +75,7 @@ export async function getQueuedProgramsController(requestContext: RequestContext
   }, []);
   return {
     statusCode: 200,
-    body: JSON.stringify(messages),
+    body: JSON.stringify(messageBodies),
   };
 }
 

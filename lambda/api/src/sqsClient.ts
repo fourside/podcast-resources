@@ -30,3 +30,16 @@ export async function receiveMessages(): Promise<SQS.ReceiveMessageResult> {
   };
   return sqsClient.receiveMessage(params).promise();
 }
+
+export async function receiveDeadLetterMessages(): Promise<SQS.ReceiveMessageResult> {
+  const queueUrl = process.env.deadLetterQueueUrl;
+  if (!queueUrl) {
+    throw new Error("not passed deadLetterQueueUrl");
+  }
+
+  const params: SQS.Types.ReceiveMessageRequest = {
+    QueueUrl: queueUrl,
+    VisibilityTimeout: 0,
+  };
+  return sqsClient.receiveMessage(params).promise();
+}
