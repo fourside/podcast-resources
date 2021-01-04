@@ -12,6 +12,7 @@
   "dependencies": {
     "aws-sdk": "^2.778.0",
     "fast-xml-parser": "^3.17.4",
+    "firebase-admin": "^9.4.2",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
