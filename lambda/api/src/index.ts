@@ -2,6 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { router } from "./router";
 import { requestContextFactory } from "./controllers";
 import { ClientError } from "./ClientError";
+import { authFilter } from "./AuthFilter";
 
 export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   console.log(JSON.stringify(event));
@@ -10,7 +11,16 @@ export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayPr
     if (!bucketName) {
       throw new Error("not passed bucketName");
     }
-    const { httpMethod, path } = event;
+    const { httpMethod, path, headers } = event;
+    const isAuth = await authFilter(headers);
+    if (!isAuth) {
+      return {
+        statusCode: 403,
+        body: JSON.stringify({
+          message: "not authenticated",
+        }),
+      };
+    }
     const controller = router(httpMethod, path);
     console.log("controller", controller.name);
     const requestContext = requestContextFactory(event, bucketName);
