@@ -51,6 +51,7 @@ export async function postProgramController(requestContext: RequestContext): Pro
     statusCode: 201,
     headers: {
       "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Authorization",
     },
     body: "",
   };
