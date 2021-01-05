@@ -7,6 +7,7 @@ import { LambdaFunction } from "@aws-cdk/aws-events-targets";
 import { RetentionDays } from "@aws-cdk/aws-logs";
 import { RestApi, LambdaIntegration, Cors } from "@aws-cdk/aws-apigateway";
 import { Queue } from "@aws-cdk/aws-sqs";
+import { PolicyStatement, Effect } from "@aws-cdk/aws-iam";
 
 const PARCEL_CACHE_BASE_DIR = "./.parcel-cache";
 
@@ -83,6 +84,13 @@ export class PodcastResourcesStack extends Stack {
     queue.grantSendMessages(apiBackend);
     queue.grantConsumeMessages(apiBackend);
     deadLetterQueue.grantConsumeMessages(apiBackend);
+
+    const ssmGetParamPolicy = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["ssm:GetParameter"],
+      resources: ["*"],
+    });
+    apiBackend.addToRolePolicy(ssmGetParamPolicy);
 
     const radikoApi = new RestApi(this, "radikoApi");
     const integration = new LambdaIntegration(apiBackend);
