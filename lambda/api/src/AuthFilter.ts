@@ -1,4 +1,4 @@
-import { initializeApp, credential, auth } from "firebase-admin";
+import * as admin from "firebase-admin";
 import { getQueuedProgramsController, postProgramController } from "./controllers";
 import { getServiceAccountJson } from "./ssmClient";
 
@@ -15,11 +15,11 @@ export async function authFilter(headers: { [name: string]: string }): Promise<b
 
 async function verifyToken(idToken: string): Promise<string> {
   const serviceAccountJson = await getServiceAccountJson();
-  initializeApp({
-    credential: credential.cert(JSON.parse(serviceAccountJson)),
+  admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(serviceAccountJson)),
   });
 
-  const decodedToken = await auth().verifyIdToken(idToken);
+  const decodedToken = await admin.auth().verifyIdToken(idToken);
   return decodedToken.uid;
 }
 
