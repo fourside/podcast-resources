@@ -16,7 +16,7 @@ export async function authFilter(headers: { [name: string]: string }): Promise<b
 async function verifyToken(idToken: string): Promise<string> {
   const serviceAccountJson = await getServiceAccountJson();
   initializeApp({
-    credential: credential.cert(serviceAccountJson),
+    credential: credential.cert(JSON.parse(serviceAccountJson)),
   });
 
   const decodedToken = await auth().verifyIdToken(idToken);
