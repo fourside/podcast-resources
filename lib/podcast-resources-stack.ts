@@ -77,6 +77,7 @@ export class PodcastResourcesStack extends Stack {
         bucketName: bucket.bucketName,
         queueUrl: queue.queueUrl,
         deadLetterQueueUrl: deadLetterQueue.queueUrl,
+        env: process.env.ENV || "prod",
       },
     });
 

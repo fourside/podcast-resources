@@ -3,7 +3,8 @@ import { SSM, config } from "aws-sdk";
 config.update({ region: "ap-northeast-1" });
 
 const ssm = new SSM();
-const ssmPath = "/podcast-table/firebase-admin/json";
+const env = process.env.env || "dev";
+const ssmPath = `/podcast-table/${env}/firebase-admin/json`;
 
 export async function getServiceAccountJson(): Promise<string> {
   const request: SSM.Types.GetParameterRequest = {
