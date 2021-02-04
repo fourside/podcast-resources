@@ -14,10 +14,12 @@ export async function authFilter(headers: { [name: string]: string }): Promise<b
 }
 
 async function verifyToken(idToken: string): Promise<string> {
-  const serviceAccountJson = await getServiceAccountJson();
-  admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(serviceAccountJson)),
-  });
+  if (admin.app.length === 0) {
+    const serviceAccountJson = await getServiceAccountJson();
+    admin.initializeApp({
+      credential: admin.credential.cert(JSON.parse(serviceAccountJson)),
+    });
+  }
 
   const decodedToken = await admin.auth().verifyIdToken(idToken);
   return decodedToken.uid;
