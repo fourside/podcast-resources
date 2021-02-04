@@ -67,9 +67,9 @@ export async function getQueuedProgramsController(requestContext: RequestContext
       body: "",
     };
   }
-  const messageBodies = messages.reduce<any>((acc, cur) => {
+  const messageBodies = messages.reduce<PostBody[]>((acc, cur) => {
     if (cur.Body) {
-      const body = JSON.parse(cur.Body);
+      const body: PostBody = JSON.parse(cur.Body);
       acc.push(body);
     }
     return acc;
