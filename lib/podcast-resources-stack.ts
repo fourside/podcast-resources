@@ -9,8 +9,6 @@ import { RestApi, LambdaIntegration, Cors } from "@aws-cdk/aws-apigateway";
 import { Queue } from "@aws-cdk/aws-sqs";
 import { PolicyStatement, Effect } from "@aws-cdk/aws-iam";
 
-const PARCEL_CACHE_BASE_DIR = "./.parcel-cache";
-
 export class PodcastResourcesStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
