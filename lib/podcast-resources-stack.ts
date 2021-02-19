@@ -29,7 +29,6 @@ export class PodcastResourcesStack extends Stack {
       entry: "lambda/xml/src/index.ts",
       handler: "handler",
       runtime: Runtime.NODEJS_12_X,
-      cacheDir: `${PARCEL_CACHE_BASE_DIR}/xml`,
       logRetention: RetentionDays.ONE_MONTH,
       timeout: Duration.minutes(10),
       environment: {
@@ -71,7 +70,6 @@ export class PodcastResourcesStack extends Stack {
       entry: "lambda/api/src/index.ts",
       handler: "handler",
       runtime: Runtime.NODEJS_12_X,
-      cacheDir: `${PARCEL_CACHE_BASE_DIR}/api`,
       logRetention: RetentionDays.ONE_MONTH,
       environment: {
         bucketName: bucket.bucketName,
