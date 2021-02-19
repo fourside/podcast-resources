@@ -15,8 +15,8 @@
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.90.0",
-    "@types/jest": "^26.0.10",
-    "@types/node": "10.17.27",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.30",
     "aws-cdk": "1.90.0",
     "esbuild": "^0.8.49",
     "eslint": "^7.12.0",
@@ -25,9 +25,9 @@
     "jest": "^26.4.2",
     "lint-staged": "^10.4.2",
     "prettier": "^2.1.2",
-    "ts-jest": "^26.2.0",
-    "ts-node": "^8.1.0",
-    "typescript": "~3.9.7"
+    "ts-jest": "^26.5.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.5"
   },
   "dependencies": {
     "@aws-cdk/aws-apigateway": "1.90.0",
