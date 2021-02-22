@@ -26,7 +26,7 @@ export class PodcastResourcesStack extends Stack {
     const xmlProcessorFunction = new NodejsFunction(this, "xml", {
       entry: "lambda/xml/src/index.ts",
       handler: "handler",
-      runtime: Runtime.NODEJS_12_X,
+      runtime: Runtime.NODEJS_14_X,
       logRetention: RetentionDays.ONE_MONTH,
       timeout: Duration.minutes(10),
       environment: {
@@ -67,7 +67,7 @@ export class PodcastResourcesStack extends Stack {
     const apiBackend = new NodejsFunction(this, "radikoApiBackend", {
       entry: "lambda/api/src/index.ts",
       handler: "handler",
-      runtime: Runtime.NODEJS_12_X,
+      runtime: Runtime.NODEJS_14_X,
       logRetention: RetentionDays.ONE_MONTH,
       environment: {
         bucketName: bucket.bucketName,
