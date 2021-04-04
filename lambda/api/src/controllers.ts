@@ -64,6 +64,10 @@ export async function getQueuedProgramsController(requestContext: RequestContext
   if (messages.length === 0) {
     return {
       statusCode: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Authorization",
+      },
       body: "",
     };
   }
@@ -76,6 +80,10 @@ export async function getQueuedProgramsController(requestContext: RequestContext
   }, []);
   return {
     statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Authorization",
+    },
     body: JSON.stringify(messageBodies),
   };
 }
