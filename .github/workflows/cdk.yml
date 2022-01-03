@@ -3,7 +3,7 @@ name: cdk
 on:
   push:
     branches:
-      - master
+      - "main"
 
 jobs:
   aws_cdk:
