@@ -9,9 +9,10 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
+    "lint": "eslint **/*.ts",
     "lambda:ci": "npm ci --prefix lambda",
     "prettier": "prettier --write \"**/*.ts\"",
-    "precommit": "tsc --noEmit && lint-staged"
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.90.0",
@@ -21,9 +22,8 @@
     "esbuild": "^0.8.49",
     "eslint": "^7.12.0",
     "eslint-config-prettier": "^6.14.0",
-    "husky": "^4.3.0",
+    "husky": "^7.0.4",
     "jest": "^26.4.2",
-    "lint-staged": "^10.4.2",
     "prettier": "^2.1.2",
     "ts-jest": "^26.5.1",
     "ts-node": "^9.1.1",
@@ -47,15 +47,5 @@
     "printWidth": 120,
     "tabWidth": 2,
     "trailingComma": "es5"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit"
-    }
-  },
-  "lint-staged": {
-    "*.ts": [
-      "npm run prettier"
-    ]
   }
 }
