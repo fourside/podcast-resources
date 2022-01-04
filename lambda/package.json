@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.778.0",
+    "aws-sdk": "^2.1049.0",
     "fast-xml-parser": "^3.17.4",
     "firebase-admin": "^9.4.2",
     "node-fetch": "^2.6.1"
