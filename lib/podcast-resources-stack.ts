@@ -1,17 +1,31 @@
-import { Stack, StackProps, Construct, Duration } from "@aws-cdk/core";
-import { Bucket } from "@aws-cdk/aws-s3";
-import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
-import { Runtime } from "@aws-cdk/aws-lambda";
-import { Rule, Schedule } from "@aws-cdk/aws-events";
-import { LambdaFunction } from "@aws-cdk/aws-events-targets";
-import { RetentionDays } from "@aws-cdk/aws-logs";
-import { RestApi, LambdaIntegration, Cors } from "@aws-cdk/aws-apigateway";
-import { Queue } from "@aws-cdk/aws-sqs";
-import { PolicyStatement, Effect } from "@aws-cdk/aws-iam";
+import { Construct } from "constructs";
+import {
+  Stack,
+  StackProps,
+  Duration,
+  aws_s3,
+  aws_lambda_nodejs,
+  aws_lambda,
+  aws_events,
+  aws_events_targets,
+  aws_logs,
+  aws_apigateway,
+  aws_sqs,
+  aws_iam,
+} from "aws-cdk-lib";
 
 export class PodcastResourcesStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+    const { Bucket } = aws_s3;
+    const { NodejsFunction } = aws_lambda_nodejs;
+    const { Runtime } = aws_lambda;
+    const { Rule, Schedule } = aws_events;
+    const { LambdaFunction } = aws_events_targets;
+    const { RetentionDays } = aws_logs;
+    const { RestApi, LambdaIntegration, Cors } = aws_apigateway;
+    const { Queue } = aws_sqs;
+    const { PolicyStatement, Effect } = aws_iam;
 
     const bucket = new Bucket(this, "radiko-programs", {
       bucketName: "radiko-programs",
